@@ -32,3 +32,34 @@ tape( "promiser on event-emitter", async function( t){
 	t.equal( result, 42)
 	t.end()
 })
+
+tape( "promiser caches", async function( t){
+	const
+		// start with an EventEmitter
+		ee= new events.EventEmitter(),
+		// populate accessor with getters
+		promiser= Promiser( ee, "data"),
+		// use the data getter now on event-emitter
+		data1= ee.data,
+		data2= ee.data
+	t.equal( data1, data2)
+	t.end()
+})
+
+tape( "promiser cache disabled", async function( t){
+	const
+		// start with an EventEmitter
+		ee= new events.EventEmitter(),
+		// populate accessor with getters
+		promiser= Promiser( ee,{ cache: false}, "data"),
+		// use the data getter now on event-emitter
+		data1= ee.data,
+		data2= ee.data
+	t.notEqual( data1, data2)
+	t.end()
+})
+
+
+// promiser can create multiple promises
+
+// no cache
