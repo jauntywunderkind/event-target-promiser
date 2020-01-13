@@ -18,16 +18,17 @@ export function EventTargetPromiserDescriptors( target, opt, ...names){
 			once: true
 		},
 		early= opt.early,
-		self= opt.self|| (this!== globalThis&& this)|| target, // only used by early
+		self= opt.self|| (this!== globalThis&& this)|| target|| {}, // only used by early
 		target_= target
 
 	for( let name of names){
 		// build a getter for this name
 		function get(){
 			// figure out where we'll cache the resulting promise
-			let
+			const
 				cacheSymbol= get.cacheSymbol,
-				cached= cacheSymbol&& this[ cacheSymbol]
+				cached= cacheSymbol&& this[ cacheSymbol],
+				target= get.target
 			if( cached){
 				// return cached promise
 				return cached
@@ -60,6 +61,7 @@ export function EventTargetPromiserDescriptors( target, opt, ...names){
 			}
 			return promise
 		}
+		get.target= target
 		if( cache){
 			get.cacheSymbol= Symbol.for( name+ "PromiseCache")
 		}

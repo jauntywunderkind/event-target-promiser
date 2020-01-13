@@ -1,0 +1,22 @@
+{
+	"name": "event-target-promiser",
+	"version": "1.0.0",
+	"description": "",
+	"main": "event-target-promiser.js",
+	"scripts": {
+		"test": "./.test/index.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://archive.voodoowarez.com/event-target-promiser"
+	},
+	"keywords": [],
+	"author": "jauntywunderkind",
+	"license": "MIT",
+	"module": "event-target-promiser.js",
+	"esm": true,
+	"type": "module",
+	"devDependencies": {
+		"tape": "^4.13.0"
+	}
+}
