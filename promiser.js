@@ -3,10 +3,11 @@ export function EventTargetPromiserDescriptors( target, opt, ...names){
 		names.unshift( opt)
 		opt= null
 	}
+	opt= opt|| {}
 	if( opt.names){
 		names= [ ...opt.names, ...names]
 	}
-	opt= opt|| {}
+
 	const
 		props= {},
 		cache= opt.cache!== false,
@@ -33,11 +34,11 @@ export function EventTargetPromiserDescriptors( target, opt, ...names){
 			}
 			// build a listener
 			let resolve, reject
-			function listener(){
-				resolve()
+			function listener( evt){
+				resolve( evt)
 			}
 			// make a promise that returns
-			const promise= new Promise( resolve_, reject_=> {
+			const promise= new Promise( function( resolve_, reject_){
 				resolve= resolve_
 				reject= reject_
 				// listen to EventTarget
@@ -45,8 +46,9 @@ export function EventTargetPromiserDescriptors( target, opt, ...names){
 					target.addEventListener( name, listener, listenerOptions)
 				}else if( target.once){
 					target.once( name, listener)
+				}else{
+					reject( new Error("Could find addEventListener"))
 				}
-				reject( new Error("Could find addEventListener"))
 				
 			})
 			// store our in-progress state
@@ -81,15 +83,15 @@ export function ApplyEventTargetPromiser( target, opt, ...names){
 		names.unshift( opt)
 		opt= null
 	}
-	if( opt.names){
+	if( opt&& opt.names){
 		names= [ ...opt.names, ...names]
 	}
-	opt= opt|| opt
+	opt= opt|| {}
 
 	const
 		self= opt.self|| (this!== globalThis&& this)|| target,
-		props= EventTargetPromiserDescriptors( et, opt, ...names)
-	Object.defineProperties( target, props)
+		props= EventTargetPromiserDescriptors( target, opt, ...names)
+	Object.defineProperties( self, props)
 	return self
 }
 export {
